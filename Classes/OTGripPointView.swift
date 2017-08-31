@@ -27,7 +27,7 @@ class OTGripPointView: UIView {
     public var gripPointStrokeColor: UIColor?
     public var gripPointFillColor: UIColor?
     
-    let gripPointSize:CGFloat = 10
+    let gripPointDiameter:CGFloat = 10
     let gripPointStrokeWidth:CGFloat = 2
     
     init()
@@ -39,7 +39,7 @@ class OTGripPointView: UIView {
     override init(frame: CGRect)
     {
         super.init(frame: frame)
-        self.backgroundColor = UIColor.clear
+        backgroundColor = UIColor.clear
     }
     
     @available(*, unavailable)
@@ -51,27 +51,27 @@ class OTGripPointView: UIView {
     
     override func draw(_ rect: CGRect)
     {
-        let strokeRect = rect.insetBy(dx: self.gripPointSize, dy: self.gripPointSize)
-        self.draws(strokeRect: strokeRect, lineWidth: self.viewStrokeLineWidth, color: self.viewStrokeColor!)
+        let strokeRect = rect.insetBy(dx: gripPointDiameter, dy: gripPointDiameter)
+        draws(strokeRect: strokeRect, lineWidth: viewStrokeLineWidth, color: viewStrokeColor!)
         
-        let leftX:CGFloat = self.gripPointSize/2
-        let rightX:CGFloat = rect.size.width - self.gripPointSize - self.gripPointSize/2
-        let upperY:CGFloat = self.gripPointSize/2
-        let lowerY:CGFloat = rect.size.height - self.gripPointSize - self.gripPointSize/2
+        let leftX:CGFloat = gripPointDiameter/2
+        let rightX:CGFloat = rect.size.width - gripPointDiameter - gripPointDiameter/2
+        let upperY:CGFloat = gripPointDiameter/2
+        let lowerY:CGFloat = rect.size.height - gripPointDiameter - gripPointDiameter/2
         
-        let gripPointSize = CGSize(width: self.gripPointSize, height: self.gripPointSize)
+        let gripPointSize = CGSize(width: gripPointDiameter, height: gripPointDiameter)
         
         let upperLeft = CGRect(origin: CGPoint(x: leftX, y: upperY), size: gripPointSize)
-        self.draws(circleRect: upperLeft, strokeWidth: self.gripPointStrokeWidth, strokeColor: self.gripPointStrokeColor!, fillColor: self.gripPointFillColor!)
+        draws(circleRect: upperLeft, strokeWidth: gripPointStrokeWidth, strokeColor: gripPointStrokeColor!, fillColor: gripPointFillColor!)
         
         let upperRight = CGRect(origin: CGPoint(x: rightX, y: upperY), size: gripPointSize)
-        self.draws(circleRect: upperRight, strokeWidth: self.gripPointStrokeWidth, strokeColor: self.gripPointStrokeColor!, fillColor: self.gripPointFillColor!)
+        draws(circleRect: upperRight, strokeWidth: gripPointStrokeWidth, strokeColor: gripPointStrokeColor!, fillColor: gripPointFillColor!)
         
         let lowerLeft = CGRect(origin: CGPoint(x: leftX, y: lowerY), size:gripPointSize)
-        self.draws(circleRect: lowerLeft, strokeWidth: self.gripPointStrokeWidth, strokeColor: self.gripPointStrokeColor!, fillColor: self.gripPointFillColor!)
+        draws(circleRect: lowerLeft, strokeWidth: gripPointStrokeWidth, strokeColor: gripPointStrokeColor!, fillColor: gripPointFillColor!)
         
         let lowerRight = CGRect(origin: CGPoint(x: rightX, y: lowerY), size:gripPointSize)
-        self.draws(circleRect: lowerRight, strokeWidth: self.gripPointStrokeWidth, strokeColor: self.gripPointStrokeColor!, fillColor: self.gripPointFillColor!)
+        draws(circleRect: lowerRight, strokeWidth: gripPointStrokeWidth, strokeColor: gripPointStrokeColor!, fillColor: gripPointFillColor!)
     }
     
     

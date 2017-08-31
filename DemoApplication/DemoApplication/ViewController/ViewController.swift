@@ -15,10 +15,10 @@ class ViewController: UIViewController,OTResizableViewDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        let yourView = UIView.init(frame: CGRect(x: 40, y: 40, width: 200, height: 300))
+        let yourView = UIView(frame: CGRect(x: 40, y: 40, width: 200, height: 300))
         yourView.backgroundColor = UIColor.blue
         
-        let resizableView = OTResizableView.init(contentView: yourView)
+        let resizableView = OTResizableView(contentView: yourView)
         resizableView.delegate = self;
         
         self.view.addSubview(resizableView)
