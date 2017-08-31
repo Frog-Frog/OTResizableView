@@ -1,0 +1,8 @@
+language: objective-c
+
+before_install:
+  - gem install cocoapods -v '0.34.4'
+  - pod install
+
+script:
+  - xctool -workspace OTResizableView.xcworkspace -scheme OTResizableView -sdk iphonesimulator ONLY_ACTIVE_ARCH=NO
