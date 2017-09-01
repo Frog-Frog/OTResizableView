@@ -8,8 +8,7 @@ Resize and move your UIView.
 Change OTResizableView's grip point and outline color.
 
 ## Demo
-
-Coming soon...
+![OTResizableVIewDemo.gif](https://qiita-image-store.s3.amazonaws.com/0/152335/4247576c-8532-e632-c335-6445634904b7.gif "OTResizableVIewDemo.gif")
  
 ## Usage
 
