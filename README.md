@@ -28,19 +28,31 @@ self.view.addSubview(resizableView)
 
 ## Install
 
-**CocoaPods**  
+### CocoaPods  
 Add this to your Podfile.
 
 ```PodFile
 pod 'OTResizableView'
 ```
 
-**Carthage**  
+### Carthage  
 Add this to your Cartfile.
 
 ```Cartfile
 github "PKPK-Carnage/OTResizableView"
 ```
+
+## Help
+
+If you want to support this framework, you can do these things.
+
+* Please let us know if you have any requests for me.
+
+	I will do my best to live up to your expectations.
+
+* You can make contribute code, issues and pull requests.
+	
+	I promise to confirm them.
 
 ## Licence
 
@@ -48,4 +60,4 @@ github "PKPK-Carnage/OTResizableView"
 
 ## Author
 
-[PKPK-Carnage](https://github.com/PKPK-Carnage)
+[PKPK-Carnage🦎](https://github.com/PKPK-Carnage)
