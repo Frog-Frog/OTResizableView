@@ -29,7 +29,7 @@ enum TappedPosition: Int
     case None
 }
 
-public protocol OTResizableViewDelegate:class {
+open protocol OTResizableViewDelegate:class {
     
     func tapBegin(resizableView:OTResizableView)
     
@@ -41,59 +41,59 @@ public protocol OTResizableViewDelegate:class {
 
 }
 
-public class OTResizableView: UIView, UIGestureRecognizerDelegate {
+open class OTResizableView: UIView, UIGestureRecognizerDelegate {
     
-    weak public var delegate:OTResizableViewDelegate?
+    weak open var delegate:OTResizableViewDelegate?
     
-    public var minimumHeight:CGFloat = 100
-    public var minimumWidth:CGFloat = 100
+    open var minimumHeight:CGFloat = 100
+    open var minimumWidth:CGFloat = 100
     
-    public var gripTappableSize:CGFloat = 40
+    open var gripTappableSize:CGFloat = 40
     
-    public var contentView:UIView = UIView.init()
+    open var contentView:UIView = UIView.init()
     
-    private let gripPointDiameter:CGFloat = 10
+    open let gripPointDiameter:CGFloat = 10
     
-    public var resizeEnabled:Bool = false
+    open var resizeEnabled:Bool = false
     {
         didSet {
             gripPointView.isHidden = resizeEnabled ? false:true
         }
     }
     
-    public var viewStrokeColor = UIColor.red
+    open var viewStrokeColor = UIColor.red
     {
         didSet {
             gripPointView.viewStrokeColor = viewStrokeColor
         }
     }
 
-    public var gripPointStrokeColor = UIColor.white
+    open var gripPointStrokeColor = UIColor.white
     {
         didSet{
             gripPointView.gripPointStrokeColor = gripPointStrokeColor
         }
     }
     
-    public var gripPointFillColor = UIColor.blue
+    open var gripPointFillColor = UIColor.blue
     {
         didSet {
             gripPointView.gripPointFillColor = gripPointFillColor
         }
     }
     
-    private var currentTappedPostion:TappedPosition = TappedPosition.None
+    open var currentTappedPostion:TappedPosition = TappedPosition.None
     
-    private var startFrame = CGRect.zero
-    private var minimumPoint = CGPoint.zero
+    open var startFrame = CGRect.zero
+    open var minimumPoint = CGPoint.zero
     
-    private var touchStartPointInSuperview = CGPoint.zero
-    private var touchStartPointInSelf = CGPoint.zero
+    open var touchStartPointInSuperview = CGPoint.zero
+    open var touchStartPointInSelf = CGPoint.zero
     
-    private var gripPointView:OTGripPointView = OTGripPointView.init()
+    open var gripPointView:OTGripPointView = OTGripPointView.init()
     
     //MARK:Initialize
-    public init(contentView: UIView) {
+    open init(contentView: UIView) {
         super.init(frame: contentView.bounds.insetBy(dx: -gripPointDiameter, dy: -gripPointDiameter))
         
         initialize()
@@ -103,7 +103,7 @@ public class OTResizableView: UIView, UIGestureRecognizerDelegate {
     
     
     @available(*, unavailable)
-    required public init?(coder aDecoder: NSCoder)
+    required open init?(coder aDecoder: NSCoder)
     {
         fatalError("init(coder:) has not been implemented")
     }
@@ -116,7 +116,7 @@ public class OTResizableView: UIView, UIGestureRecognizerDelegate {
     
     
     //MARK:LifeCycle
-    override public func willMove(toSuperview newSuperview: UIView?) {
+    override open func willMove(toSuperview newSuperview: UIView?) {
         super.willMove(toSuperview: newSuperview)
         
         prepareGripPointView()
