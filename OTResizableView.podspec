@@ -1,7 +1,7 @@
 Pod::Spec.new do |s|
 
   s.name         = "OTResizableView"
-  s.version      = "1.0"
+  s.version      = "1.1"
   s.summary      = "OTResizableView is a UIView library that can be resized with fingers."
   s.homepage     = "https://github.com/PKPK-Carnage/OTResizableView"
   s.license      = { :type => "MIT", :file => "LICENSE" }
