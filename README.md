@@ -16,7 +16,7 @@ Change OTResizableView's grip point and outline color.
 
 import OTResizableView
 
-let resizableView = OTResizableView.init(contentView: yourView)
+let resizableView = OTResizableView(contentView: yourView)
 resizableView.delegate = self;
         
 // If you want to change resizableView colors, you can customize here.
