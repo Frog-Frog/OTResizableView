@@ -21,7 +21,7 @@ resizableView.delegate = self;
         
 // If you want to change resizableView colors, you can customize here.
 
-self.view.addSubview(resizableView)
+view.addSubview(resizableView)
 
 
 ```
