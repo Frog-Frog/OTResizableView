@@ -56,7 +56,7 @@ If you want to support this framework, you can do these things.
 
 ## Licence
 
-[MIT](https://github.com/PKPK-Carnage/OTGanttChartKit/blob/master/LICENSE)
+[MIT](https://github.com/PKPK-Carnage/OTResizableView/blob/master/LICENSE)
 
 ## Author
 
