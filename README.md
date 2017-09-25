@@ -12,7 +12,7 @@ Change OTResizableView's grip point and outline color.
  
 ## Usage
 
-```swift:Swift
+```swift
 
 import OTResizableView
 
