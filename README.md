@@ -12,16 +12,16 @@ Change OTResizableView's grip point and outline color.
  
 ## Usage
 
-```swift:Swift
+```swift
 
 import OTResizableView
 
-let resizableView = OTResizableView.init(contentView: yourView)
+let resizableView = OTResizableView(contentView: yourView)
 resizableView.delegate = self;
         
 // If you want to change resizableView colors, you can customize here.
 
-self.view.addSubview(resizableView)
+view.addSubview(resizableView)
 
 
 ```
@@ -56,7 +56,7 @@ If you want to support this framework, you can do these things.
 
 ## Licence
 
-[MIT](https://github.com/PKPK-Carnage/OTGanttChartKit/blob/master/LICENSE)
+[MIT](https://github.com/PKPK-Carnage/OTResizableView/blob/master/LICENSE)
 
 ## Author
 
