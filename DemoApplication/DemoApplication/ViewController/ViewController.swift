@@ -48,21 +48,21 @@ class ViewController: UIViewController,OTResizableViewDelegate {
     func tapBegin(_ resizableView: OTResizableView) {
         resizableView.resizeEnabled = resizableView.resizeEnabled ? false : true
         
-        print("tapBegin:\(NSStringFromCGRect(resizableView.frame))")
+        print("tapBegin:\(resizableView.frame)")
     }
     
     
     func tapChanged(_ resizableView: OTResizableView) {
-        print("changeNow:\(NSStringFromCGRect(resizableView.frame))")
+        print("tapChanged:\(resizableView.frame))")
     }
     
     
     func tapMoved(_ resizableView: OTResizableView) {
-        print("tapMoved:\(NSStringFromCGRect(resizableView.frame))")
+        print("tapMoved:\(resizableView.frame))")
     }
     
     
     func tapEnd(_ resizableView: OTResizableView) {
-        print("tapEnd:\(NSStringFromCGRect(resizableView.frame))")
+        print("tapEnd:\(resizableView.frame)")
     }
 }
