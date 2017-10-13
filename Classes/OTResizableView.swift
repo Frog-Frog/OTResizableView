@@ -19,7 +19,7 @@
 
 import UIKit
 
-public enum TappedPosition {
+@objc public enum TappedPosition: Int {
     case UpperLeft
     case UpperRight
     case LowerLeft
@@ -29,37 +29,24 @@ public enum TappedPosition {
 }
 
 
-public protocol OTResizableViewDelegate:class {
+@objc public protocol OTResizableViewDelegate: class {
     
-    func tapBegin(_ resizableView:OTResizableView)
+    @objc optional func tapBegin(_ resizableView:OTResizableView)
     
-    func tapChanged(_ resizableView:OTResizableView)
+    @objc optional func tapChanged(_ resizableView:OTResizableView)
     
-    func tapMoved(_ resizableView:OTResizableView)
+    @objc optional func tapMoved(_ resizableView:OTResizableView)
     
-    func tapEnd(_ resizableView:OTResizableView)
-    
-}
-
-
-extension OTResizableViewDelegate {
-    
-    func tapBegin(_ resizableView:OTResizableView){}
-    
-    func tapChanged(_ resizableView:OTResizableView){}
-    
-    func tapMoved(_ resizableView:OTResizableView){}
-    
-    func tapEnd(_ resizableView:OTResizableView){}
+    @objc optional func tapEnd(_ resizableView:OTResizableView)
     
 }
 
 
-open class OTResizableView: UIView, UIGestureRecognizerDelegate {
+@objc open class OTResizableView: UIView, UIGestureRecognizerDelegate {
     
-    public weak var delegate: OTResizableViewDelegate?
+    @objc public weak var delegate: OTResizableViewDelegate?
     
-    public var minimumWidth: CGFloat = 100 {
+    @objc public var minimumWidth: CGFloat = 100 {
         didSet {
             if keepAspectEnabled {
                 minimumWidth = oldValue
@@ -67,7 +54,7 @@ open class OTResizableView: UIView, UIGestureRecognizerDelegate {
         }
     }
     
-    public var minimumHeight: CGFloat = 100 {
+    @objc public var minimumHeight: CGFloat = 100 {
         didSet {
             if keepAspectEnabled {
                 minimumHeight = oldValue
@@ -75,7 +62,7 @@ open class OTResizableView: UIView, UIGestureRecognizerDelegate {
         }
     }
     
-    public var keepAspectEnabled = false {
+    @objc public var keepAspectEnabled = false {
         willSet {
             if newValue {
                 minimumWidth = frame.width
@@ -84,37 +71,37 @@ open class OTResizableView: UIView, UIGestureRecognizerDelegate {
         }
     }
     
-    open var resizeEnabled = false {
+    @objc open var resizeEnabled = false {
         didSet {
             gripPointView.isHidden = resizeEnabled ? false:true
         }
     }
     
-    open var viewStrokeColor = UIColor.red {
+    @objc open var viewStrokeColor = UIColor.red {
         didSet {
             gripPointView.viewStrokeColor = viewStrokeColor
         }
     }
     
-    open var gripPointStrokeColor = UIColor.white {
+    @objc open var gripPointStrokeColor = UIColor.white {
         didSet{
             gripPointView.gripPointStrokeColor = gripPointStrokeColor
         }
     }
     
-    open var gripPointFillColor = UIColor.blue {
+    @objc open var gripPointFillColor = UIColor.blue {
         didSet {
             gripPointView.gripPointFillColor = gripPointFillColor
         }
     }
     
-    open var gripTappableSize: CGFloat = 40
+    @objc open var gripTappableSize: CGFloat = 40
     
-    public let gripPointDiameter: CGFloat = 10
+    @objc public let gripPointDiameter: CGFloat = 10
     
-    private(set) var contentView = UIView()
+    @objc public private(set) var contentView = UIView()
     
-    private(set) var currentTappedPostion:TappedPosition = .None
+    @objc public private(set) var currentTappedPostion:TappedPosition = .None
     
     private var startFrame = CGRect.zero
     private var minimumPoint = CGPoint.zero
@@ -122,7 +109,7 @@ open class OTResizableView: UIView, UIGestureRecognizerDelegate {
     private var touchStartPointInSuperview = CGPoint.zero
     private var touchStartPointInSelf = CGPoint.zero
     
-    private var keepAspectFrame: CGRect?
+    private var maxAspectFrame = CGRect.zero
     
     private var gripPointView = OTGripPointView()
     
@@ -168,7 +155,9 @@ open class OTResizableView: UIView, UIGestureRecognizerDelegate {
     
     
     private func prepareGripPointView() {
-        gripPointView = OTGripPointView.init(frame: bounds)
+        gripPointView.removeFromSuperview()
+        
+        gripPointView = OTGripPointView(frame: bounds)
         gripPointView.isHidden = true
         
         gripPointView.viewStrokeColor = viewStrokeColor
@@ -191,9 +180,10 @@ open class OTResizableView: UIView, UIGestureRecognizerDelegate {
     }
     
     
-    private func setFrame(newFrame: CGRect) {
+    @objc public func setResizedFrame(newFrame: CGRect) {
         super.frame = newFrame
         contentView.frame = bounds.insetBy(dx: gripPointDiameter, dy: gripPointDiameter)
+        contentView.setNeedsDisplay()
         gripPointView.frame = bounds
         gripPointView.setNeedsDisplay()
     }
@@ -201,7 +191,7 @@ open class OTResizableView: UIView, UIGestureRecognizerDelegate {
     
     //MARK: - Gesture
     @objc open func handleTap(gesture: UITapGestureRecognizer) {
-        delegate?.tapBegin(self)
+        delegate?.tapBegin?(self)
     }
     
     
@@ -217,13 +207,23 @@ open class OTResizableView: UIView, UIGestureRecognizerDelegate {
                 
                 currentTappedPostion = detectCurrentTappedPosition()
                 
-                if currentTappedPostion != .None && currentTappedPostion != .Center {
+                
+                switch currentTappedPostion {
+                case .UpperLeft, .UpperRight, .LowerLeft, .LowerRight:
                     minimumPoint = measureMinimumPoint()
+                
+                    if keepAspectEnabled {
+                        maxAspectFrame = measureMaximumKeepAspectFrame()
+                    }
+                    
+                case .Center:
+                    break
+                    
+                case .None:
+                    break
                 }
             }
-            
         case .changed:
-            
             if resizeEnabled {
                 switch currentTappedPostion {
                 case .UpperLeft, .UpperRight, .LowerLeft, .LowerRight:
@@ -235,17 +235,17 @@ open class OTResizableView: UIView, UIGestureRecognizerDelegate {
                     if keepAspectEnabled {
                         resizedRect = generateKeepAspectFrame(position: currentTappedPostion, currentTouchPoint: currentTouchPointInSuperview)
                         resizedRect = adjustKeepAspect(rect: resizedRect)
-                        setFrame(newFrame: resizedRect)
                     } else {
                         let differenceX = currentTouchPointInSuperview.x - touchStartPointInSuperview.x
                         let differenceY = currentTouchPointInSuperview.y - touchStartPointInSuperview.y
                         
                         resizedRect = generateNormalFrame(position: currentTappedPostion, differenceX: differenceX, differenceY: differenceY)
                         resizedRect = adjustNormal(rect: resizedRect)
-                        setFrame(newFrame: resizedRect)
                     }
                     
-                    delegate?.tapChanged(self)
+                    setResizedFrame(newFrame: resizedRect)
+                    
+                    delegate?.tapChanged?(self)
                     
                 case .Center:
                     
@@ -253,34 +253,33 @@ open class OTResizableView: UIView, UIGestureRecognizerDelegate {
                     
                     moveView(touchPoint: currentTouchPointInSelf, startPoint: touchStartPointInSelf)
                     
-                    delegate?.tapMoved(self)
+                    delegate?.tapMoved?(self)
                     
                 case .None:
                     return
                 }
             }
-            
         case .ended:
             
             currentTappedPostion = .None
             
-            keepAspectFrame = nil
+            maxAspectFrame = CGRect.zero
             
-            delegate?.tapEnd(self)
+            delegate?.tapEnd?(self)
             
         case .cancelled:
             
             currentTappedPostion = .None
             
-            keepAspectFrame = nil
+            maxAspectFrame = CGRect.zero
             
-            delegate?.tapEnd(self)
+            delegate?.tapEnd?(self)
             
         default:
             
             currentTappedPostion = .None
             
-            keepAspectFrame = nil
+            maxAspectFrame = CGRect.zero
             
             return
         }
@@ -310,29 +309,33 @@ open class OTResizableView: UIView, UIGestureRecognizerDelegate {
     }
     
     private func adjustNormal(rect: CGRect) -> CGRect {
+        guard let superview = superview else {
+            return CGRect.zero
+        }
+        
         var x = rect.origin.x
         var y = rect.origin.y
         var width = rect.size.width
         var height = rect.size.height
         
-        if x < superview!.bounds.origin.x {
-            let deltaW = frame.origin.x - superview!.bounds.origin.x
+        if x < superview.bounds.origin.x {
+            let deltaW = frame.origin.x - superview.bounds.origin.x
             width = frame.size.width + deltaW
-            x = superview!.bounds.origin.x
+            x = superview.bounds.origin.x
         }
         
-        if rect.origin.x + width > superview!.bounds.origin.x + superview!.bounds.size.width {
-            width = superview!.bounds.size.width - x
+        if rect.origin.x + width > superview.bounds.origin.x + superview.bounds.size.width {
+            width = superview.bounds.size.width - x
         }
         
-        if y < superview!.bounds.origin.y {
-            let deltaH = frame.origin.y - superview!.bounds.origin.y
+        if y < superview.bounds.origin.y {
+            let deltaH = frame.origin.y - superview.bounds.origin.y
             height = frame.size.height + deltaH
-            y = superview!.bounds.origin.y
+            y = superview.bounds.origin.y
         }
         
-        if y + height > superview!.bounds.origin.y + superview!.bounds.size.height {
-            height = superview!.bounds.size.height - y
+        if y + height > superview.bounds.origin.y + superview.bounds.size.height {
+            height = superview.bounds.size.height - y
         }
         
         if width <= minimumWidth {
@@ -408,65 +411,37 @@ open class OTResizableView: UIView, UIGestureRecognizerDelegate {
     
     private func adjustKeepAspect(rect: CGRect) -> CGRect{
         
+        guard let superview = superview else {
+            return CGRect.zero
+        }
+        
         var x = rect.origin.x
         var y = rect.origin.y
         var width = rect.size.width
         var height = rect.size.height
         
-        if x < superview!.bounds.origin.x {
-            let deltaW = frame.origin.x - superview!.bounds.origin.x
-            width = frame.size.width + deltaW
-            x = superview!.bounds.origin.x
-            
-            if let keepAspectFrame = keepAspectFrame {
-                y = keepAspectFrame.origin.y
-                height = keepAspectFrame.height
-            } else {
-                keepAspectFrame = CGRect(x: x, y: y, width: width, height: height)
+        if x < superview.bounds.origin.x {
+            if currentTappedPostion == .UpperLeft || currentTappedPostion == .LowerLeft {
+                return maxAspectFrame
             }
-            
-            return CGRect(x: x, y: y, width: width, height: height)
         }
-        
-        if rect.origin.x + width > superview!.bounds.origin.x + superview!.bounds.size.width {
-            width = superview!.bounds.size.width - x
-            
-            if let keepAspectFrame = keepAspectFrame {
-                y = keepAspectFrame.origin.y
-                height = keepAspectFrame.height
-            } else {
-                keepAspectFrame = CGRect(x: x, y: y, width: width, height: height)
+
+        if x + width > superview.bounds.origin.x + superview.bounds.size.width {
+            if currentTappedPostion == .UpperRight || currentTappedPostion == .LowerRight {
+                return maxAspectFrame
             }
-            
-            return CGRect(x: x, y: y, width: width, height: height)
         }
-        
-        if y < superview!.bounds.origin.y {
-            let deltaH = frame.origin.y - superview!.bounds.origin.y
-            height = frame.size.height + deltaH
-            y = superview!.bounds.origin.y
-            
-            if let keepAspectFrame = keepAspectFrame {
-                x = keepAspectFrame.origin.x
-                width = keepAspectFrame.width
-            } else {
-                keepAspectFrame = CGRect(x: x, y: y, width: width, height: height)
+
+        if y < superview.bounds.origin.y {
+            if currentTappedPostion == .UpperLeft || currentTappedPostion == .UpperRight {
+                return maxAspectFrame
             }
-            
-            return CGRect(x: x, y: y, width: width, height: height)
         }
-        
-        if y + height > superview!.bounds.origin.y + superview!.bounds.size.height {
-            height = superview!.bounds.size.height - y
-            
-            if let keepAspectFrame = keepAspectFrame {
-                x = keepAspectFrame.origin.x
-                width = keepAspectFrame.width
-            } else {
-                keepAspectFrame = CGRect(x: x, y: y, width: width, height: height)
+
+        if y + height > superview.bounds.origin.y + superview.bounds.size.height {
+            if currentTappedPostion == .LowerLeft || currentTappedPostion == .LowerRight {
+                return maxAspectFrame
             }
-            
-            return CGRect(x: x, y: y, width: width, height: height)
         }
         
         if width <= minimumWidth {
@@ -481,7 +456,6 @@ open class OTResizableView: UIView, UIGestureRecognizerDelegate {
         
         return CGRect(x: x, y: y, width: width, height: height)
     }
-    
     
     
     //MARK: - Prepare TapChanged
@@ -542,8 +516,66 @@ open class OTResizableView: UIView, UIGestureRecognizerDelegate {
     }
     
     
-    private func moveView(touchPoint: CGPoint, startPoint: CGPoint)
-    {
+    private func measureMaximumKeepAspectFrame() -> CGRect {
+        guard let superview = superview else {
+            return CGRect.zero
+        }
+        
+        var x: CGFloat = 0
+        var y: CGFloat = 0
+        
+        switch currentTappedPostion {
+        case .UpperLeft:
+         
+            if frame.origin.x > frame.origin.y {
+                x = frame.origin.x
+                y = superview.bounds.origin.y
+            } else {
+                x = superview.bounds.origin.x
+                y = frame.origin.y
+            }
+            
+        case .UpperRight:
+            
+            if superview.bounds.width - (frame.origin.x + frame.width) > frame.origin.y {
+                x = frame.origin.x + frame.width
+                y = superview.bounds.origin.y
+            } else {
+                x = superview.bounds.width
+                y = frame.origin.y
+            }
+            
+        case .LowerLeft:
+            
+            if frame.origin.x > superview.bounds.height - (frame.origin.y + frame.height) {
+                x = frame.origin.x
+                y = superview.bounds.height
+            } else {
+                x = superview.bounds.origin.x
+                y = frame.origin.y + frame.height
+            }
+            
+        case .LowerRight:
+            
+            if superview.bounds.width - (frame.origin.x + frame.width) > superview.bounds.height - (frame.origin.y + frame.height) {
+                x = frame.origin.x + frame.width
+                y = superview.bounds.height
+            } else {
+                x = superview.bounds.width
+                y = frame.origin.y + frame.height
+            }
+            
+        default:
+            
+            break
+        }
+        
+        return generateKeepAspectFrame(position: currentTappedPostion,
+                                       currentTouchPoint: CGPoint(x: x, y: y))
+    }
+    
+    
+    private func moveView(touchPoint: CGPoint, startPoint: CGPoint) {
         var newCenter = CGPoint(x: center.x + touchPoint.x - startPoint.x, y: center.y + touchPoint.y - startPoint.y)
         
         let midPointX = bounds.midX

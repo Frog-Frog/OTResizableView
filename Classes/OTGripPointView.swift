@@ -21,11 +21,11 @@ import UIKit
 
 class OTGripPointView: UIView {
 
-    public var viewStrokeColor: UIColor?
+    var viewStrokeColor: UIColor?
     let viewStrokeLineWidth:CGFloat = 2
     
-    public var gripPointStrokeColor: UIColor?
-    public var gripPointFillColor: UIColor?
+    var gripPointStrokeColor: UIColor?
+    var gripPointFillColor: UIColor?
     
     let gripPointDiameter:CGFloat = 10
     let gripPointStrokeWidth:CGFloat = 2
