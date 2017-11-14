@@ -65,11 +65,13 @@ import UIKit
     @objc public var keepAspectEnabled = false {
         willSet {
             if newValue {
-                minimumWidth = frame.width
-                minimumHeight = frame.height
+                minimumWidth = frame.width * minimumAspectScale
+                minimumHeight = frame.height * minimumAspectScale
             }
         }
     }
+    
+    @objc open var minimumAspectScale: CGFloat = 1
     
     @objc open var resizeEnabled = false {
         didSet {
