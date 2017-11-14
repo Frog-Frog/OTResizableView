@@ -521,57 +521,49 @@ import UIKit
             return CGRect.zero
         }
         
-        var x: CGFloat = 0
-        var y: CGFloat = 0
+        var xMaxFrame = CGRect.zero
+        var yMaxFrame = CGRect.zero
         
         switch currentTappedPostion {
         case .UpperLeft:
-         
-            if frame.origin.x > frame.origin.y {
-                x = frame.origin.x
-                y = superview.bounds.origin.y
-            } else {
-                x = superview.bounds.origin.x
-                y = frame.origin.y
-            }
+            
+            xMaxFrame = generateKeepAspectFrame(position: currentTappedPostion,
+                                                currentTouchPoint: CGPoint(x: superview.bounds.origin.x, y: frame.origin.y))
+            
+            yMaxFrame = generateKeepAspectFrame(position: currentTappedPostion,
+                                                currentTouchPoint: CGPoint(x: frame.origin.x, y: superview.bounds.origin.y))
             
         case .UpperRight:
             
-            if superview.bounds.width - (frame.origin.x + frame.width) > frame.origin.y {
-                x = frame.origin.x + frame.width
-                y = superview.bounds.origin.y
-            } else {
-                x = superview.bounds.width
-                y = frame.origin.y
-            }
+            xMaxFrame = generateKeepAspectFrame(position: currentTappedPostion,
+                                                currentTouchPoint: CGPoint(x: superview.bounds.width, y: frame.origin.y))
+            
+            yMaxFrame = generateKeepAspectFrame(position: currentTappedPostion,
+                                                currentTouchPoint: CGPoint(x: frame.origin.x + frame.width, y: superview.bounds.origin.y))
             
         case .LowerLeft:
             
-            if frame.origin.x > superview.bounds.height - (frame.origin.y + frame.height) {
-                x = frame.origin.x
-                y = superview.bounds.height
-            } else {
-                x = superview.bounds.origin.x
-                y = frame.origin.y + frame.height
-            }
+            xMaxFrame = generateKeepAspectFrame(position: currentTappedPostion,
+                                                currentTouchPoint: CGPoint(x: superview.bounds.origin.x, y: frame.origin.y + frame.height))
+            
+            yMaxFrame = generateKeepAspectFrame(position: currentTappedPostion,
+                                                currentTouchPoint: CGPoint(x: frame.origin.x, y: superview.bounds.height))
             
         case .LowerRight:
             
-            if superview.bounds.width - (frame.origin.x + frame.width) > superview.bounds.height - (frame.origin.y + frame.height) {
-                x = frame.origin.x + frame.width
-                y = superview.bounds.height
-            } else {
-                x = superview.bounds.width
-                y = frame.origin.y + frame.height
-            }
+            xMaxFrame = generateKeepAspectFrame(position: currentTappedPostion,
+                                                currentTouchPoint: CGPoint(x: superview.bounds.width, y: frame.origin.y + frame.height))
+            
+            yMaxFrame = generateKeepAspectFrame(position: currentTappedPostion,
+                                                currentTouchPoint: CGPoint(x: frame.origin.x + frame.width, y: superview.bounds.height))
             
         default:
             
             break
         }
         
-        return generateKeepAspectFrame(position: currentTappedPostion,
-                                       currentTouchPoint: CGPoint(x: x, y: y))
+        return xMaxFrame.width/frame.width < yMaxFrame.width/frame.width  ? xMaxFrame : yMaxFrame
+        
     }
     
     
