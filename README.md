@@ -5,8 +5,11 @@ OTResizableView is a UIView library that can be resized with fingers.
 
 ## Features
 ・Resize
+
 ・Keep aspect resize
+
 ・Move
+
 ・Change color
 
 ## Demo
